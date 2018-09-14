@@ -9,11 +9,13 @@ public class User {
 
     private String password;
 
+    private String salt;
+
+    private String headUrl;
     // 记住密码了
     private Integer rember;
 
-    private String headUrl;
-
+    private News news;
 
     public Integer getId() {
         return id;
@@ -61,5 +63,34 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public News getNews() {
+        return news;
+    }
+
+    public void setNews(News news) {
+        this.news = news;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
+                ", headUrl='" + headUrl + '\'' +
+                ", rember=" + rember +
+                '}';
     }
 }

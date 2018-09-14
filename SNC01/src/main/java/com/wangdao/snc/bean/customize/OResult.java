@@ -8,6 +8,7 @@ public class OResult {
 
     private String msgpwd;
 
+    private String msg;
 
     public Integer getCode() {
         return code;
@@ -33,12 +34,22 @@ public class OResult {
         this.msgpwd = msgpwd;
     }
 
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String toString() {
         return "OResult{" +
                 "code=" + code +
                 ", msgname='" + msgname + '\'' +
                 ", msgpwd='" + msgpwd + '\'' +
+                ", msg='" + msg + '\'' +
                 '}';
     }
 }

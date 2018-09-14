@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangdao.snc.dao.NewsDao">
+    <resultMap id="BaseResultMap" type="com.wangdao.snc.bean.News">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="createdDate" jdbcType="TIMESTAMP" property="createdDate" />
+        <result column="image" jdbcType="VARCHAR" property="image" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="commentCount" jdbcType="INTEGER" property="commentCount" />
+        <result column="like" jdbcType="INTEGER" property="like" />
+        <result column="likecount" jdbcType="INTEGER" property="likeCount" />
+        <result column="uid" jdbcType="INTEGER" property="uid" />
+        <association property="owner" javaType="com.wangdao.snc.bean.User" column="uid"
+                     select="com.wangdao.snc.dao.UserDao.selectByPrimaryKey"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, createdDate, image, title, commentCount, `like`, likecount, uid
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from `news`
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAllNews" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        From news ORDER BY createdDate DESC
+    </select>
+
+    <insert id="insert" parameterType="com.wangdao.snc.bean.News">
+        insert into news (id, image, title, uid)
+        values (#{id}, #{image},#{title}, #{uid})
+    </insert>
+
+    <update id="updateCommentCountByNewsId">
+        update news set commentCount = commentCount + 1 where id = #{id}
+    </update>
+
+</mapper>

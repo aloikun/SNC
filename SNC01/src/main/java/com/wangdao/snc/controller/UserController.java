@@ -1,59 +1,62 @@
 package com.wangdao.snc.controller;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.wangdao.snc.bean.News;
 import com.wangdao.snc.bean.User;
 import com.wangdao.snc.bean.customize.OResult;
-import com.wangdao.snc.bean.json.JsonData;
-import org.springframework.http.RequestEntity;
+import com.wangdao.snc.service.NewsService;
+import com.wangdao.snc.service.UserService;
+import javafx.beans.binding.ObjectExpression;
+import org.apache.struts.chain.commands.ExceptionCatcher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
+
 
 @Controller
 public class UserController {
 
-    @RequestMapping(value = "/login/")
-    @ResponseBody
-    public OResult login(String username, String password, Integer rember, Model model){
-        OResult oResult = new OResult();
-        if("admin".equals(username) && "123456".equals(password)){
+    @Autowired
+    private UserService userService;
 
-            // 表示用户明密码正确
+    @Autowired
+    private NewsService newsService;
+
+
+
+    @RequestMapping("/user/{id}")
+    public String find(@PathVariable Integer id, Model model) throws Exception {
+        User user = userService.findUserById(id);
+        model.addAttribute("user", user);
+        return "personal";
+    }
+
+    @RequestMapping("/user/tosendmsg")
+    public String tosendmsg(Model model){
+
+        return "letter";
+    }
+
+    @RequestMapping("/user/addNews")
+    @ResponseBody
+    public OResult addNews(News news, HttpSession session) throws Exception{
+        User user = (User) session.getAttribute("user");
+        OResult oResult = new OResult();
+        news.setUid(user.getId());
+        news.setCreatedDate(new Date());
+        int i = newsService.insertNews(news);
+        if(i == 1){ // 添加成功
             oResult.setCode(0);
-            User user = new User();
-            user.setUsername("admin");
-            user.setId(1);
-        }else if(!"admin".equals(username)){
-            oResult.setMsgname("账号错误");
         }else{
-            oResult.setMsgpwd("密码错误");
+            oResult.setMsg("出现错误");
         }
-
-        model.addAttribute(oResult);
-        //从前端获取到json 数据
-        //oResult.setCode(0);
         return oResult;
     }
 
-    @RequestMapping("/reg")
-    @ResponseBody
-    public OResult reg(String username, String password, Integer rember){
-        //从前端获取到json 数据
-        OResult oResult = new OResult();
-        //oResult.setCode(0);
-        oResult.setMsgname("name");
-        oResult.setMsgpwd("1223");
-        //System.out.println(user);
-        //if(login == null && !login.equals("")){
-        //    return null;
-        //}
-        //map.put("code","0");
-        //map.put("msgname","msgname");
-        //map.put("msgpwd","msgname");
-        return oResult;
-    }
+
+
+
 }
